@@ -26,6 +26,9 @@ public class CrimeListFragment extends Fragment {
     private RecyclerView mCrimerecyclerView;
     private CrimeAdapter mAdapter;
 
+    //Intialized to - 1 to easily check if position has been updated
+    private int mLastUpdatedPosition = -1;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_crime_list, container, false);
@@ -35,13 +38,26 @@ public class CrimeListFragment extends Fragment {
         return view;
 
     }
-
+    @Override
+    public void onResume(){
+        super.onResume();
+        updateUI();
+    }
     private void updateUI() {
         CrimeLab crimeLab = CrimeLab.get(getActivity());
         List<Crime> crimes = crimeLab.getCrime();
+        if(mAdapter == null){
+            mAdapter = new CrimeAdapter(crimes);
+            mCrimerecyclerView.setAdapter(mAdapter);
+        }else{
+            if (mLastUpdatedPosition > -1) {
+                mAdapter.notifyItemChanged(mLastUpdatedPosition);
+                mLastUpdatedPosition = -1;
+            } else {
+                mAdapter.notifyDataSetChanged();
+            }
+        }
 
-        mAdapter = new CrimeAdapter(crimes);
-        mCrimerecyclerView.setAdapter(mAdapter);
     }
 
 
@@ -73,6 +89,7 @@ public class CrimeListFragment extends Fragment {
             Toast.makeText(getActivity(), mCrime.getTitle() + " clicked!", Toast.LENGTH_SHORT)
                     .show();
             Intent intent = CrimeActivity.newIntent(getActivity(),mCrime.getId());
+            mLastUpdatedPosition = this.getAdapterPosition(); //Challenge: Efficient RecyclerView Reloading
             startActivity(intent);
         }
 
