@@ -8,6 +8,10 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
 
 import java.util.List;
 import java.util.UUID;
@@ -20,6 +24,8 @@ public class CrimePagerActivity extends AppCompatActivity{
     private ViewPager mViewPager;
     private List<Crime> mCrimes;
     private static final String EXTRA_CRIME_ID = "com.example.terry.criminalintent.crime_id";
+    private Button mFirstButton;
+    private Button mLastButton;
 
     public static Intent newIntent(final Context packageContext, UUID crimeId){
         Intent intent = new Intent(packageContext, CrimePagerActivity.class);
@@ -53,5 +59,37 @@ public class CrimePagerActivity extends AppCompatActivity{
                break;
            }
        }
+       mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener(){
+           @Override
+           public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+               // Do nothing
+           }
+
+           @Override
+           public void onPageSelected(int position) {
+               mFirstButton.setEnabled(position != 0);
+               mLastButton.setEnabled(position != (mCrimes.size() - 1));
+           }
+
+           @Override
+           public void onPageScrollStateChanged(int state) {
+               // Do nothing
+           }
+       });
+       mFirstButton = (Button) findViewById(R.id.first_crime);
+        mFirstButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                mViewPager.setCurrentItem(0);
+            }
+        });
+        mLastButton = (Button) findViewById(R.id.last_crime);
+        mLastButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mViewPager.setCurrentItem(mCrimes.size()-1);
+            }
+        });
     }
+
 }
