@@ -1,5 +1,6 @@
 package com.example.terry.criminalintent;
 
+import java.text.DateFormat;
 import java.util.Date;
 import java.util.UUID;
 
@@ -32,6 +33,7 @@ public class Crime {
 
     public Date getDate() {
         return mDate;
+
     }
     public void setDate(Date date){
         mDate = date;
