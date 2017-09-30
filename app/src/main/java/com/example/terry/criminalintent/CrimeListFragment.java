@@ -12,8 +12,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.w3c.dom.Text;
-
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -97,7 +95,10 @@ public class CrimeListFragment extends Fragment {
             mCrime = crime;
 
             mTitleTextView.setText(mCrime.getTitle());
-            mDateTextView.setText(mDateFormat.format(mCrime.getDate()));
+            //mDateTextView.setText(mDateFormat.format(mCrime.getDate()));
+            DateFormat dateFormat = new SimpleDateFormat(CrimeFragment.DATE_FORMAT);
+            DateFormat timeFormat = new SimpleDateFormat(CrimeFragment.TIME_FORMAT);
+            mDateTextView.setText(dateFormat.format(mCrime.getDate()) + " " + timeFormat.format(mCrime.getTime()));
             mSolvedImageView.setVisibility(crime.isSolved() ? View.VISIBLE : View.GONE);
         }
     }
